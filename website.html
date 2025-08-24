@@ -1,0 +1,427 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Feed Packaging System Panel</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #ecf1eb;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+      margin: 0;
+    }
+
+    .panel {
+      background: rgb(173, 193, 186);
+      padding: 20px;
+      border-radius: 12px;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+      width: 518px;
+      height: 302px;
+      overflow-y: auto;
+      box-sizing: border-box;
+    }
+
+    h2 {
+      text-align: center;
+      margin-bottom: 10px;
+      font-size: 18px;
+    }
+
+    .icon-button {
+      width: 80px;
+      height: 80px;
+      font-size: 32px;
+      background-color: #2196F3;
+      color: white;
+      border: none;
+      border-radius: 12px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: 0.3s;
+    }
+
+    .icon-button:active {
+      transform: scale(0.95);
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 12px;
+    }
+
+    th, td {
+      padding: 4px;
+      text-align: center;
+      border: 1px solid #ccc;
+    }
+
+    button {
+      margin-top: 6px;
+      width: 100%;
+      padding: 6px;
+      font-size: 14px;
+      border: none;
+      border-radius: 6px;
+      background-color: #555;
+      color: white;
+    }
+
+    .icon-grid {
+      display: none;
+      grid-template-columns: repeat(3, 1fr);
+      grid-gap: 10px;
+      justify-items: center;
+      align-items: center;
+    }
+
+    .icon-grid.active {
+      display: grid;
+    }
+
+    .nav-buttons {
+      margin-top: 10px;
+      display: flex;
+      justify-content: space-between;
+    }
+
+    .nav-button {
+      padding: 4px 12px;
+      font-size: 18px;
+      border-radius: 6px;
+      border: none;
+      background-color: #aaa;
+      color: white;
+      cursor: pointer;
+    }
+
+    .toggle-container {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      margin: 10px 0;
+    }
+
+    .toggle-label {
+      margin-left: 10px;
+      font-weight: bold;
+    }
+
+    .switch {
+      position: relative;
+      display: inline-block;
+      width: 50px;
+      height: 24px;
+    }
+
+    .switch input {
+      opacity: 0;
+      width: 0;
+      height: 0;
+    }
+
+    .slider {
+      position: absolute;
+      cursor: pointer;
+      top: 0; left: 0;
+      right: 0; bottom: 0;
+      background-color: #ccc;
+      transition: 0.4s;
+      border-radius: 24px;
+    }
+
+    .slider:before {
+      position: absolute;
+      content: "";
+      height: 18px;
+      width: 18px;
+      left: 3px;
+      bottom: 3px;
+      background-color: white;
+      transition: 0.4s;
+      border-radius: 50%;
+    }
+
+    input:checked + .slider {
+      background-color: #2196F3;
+    }
+
+    input:checked + .slider:before {
+      transform: translateX(26px);
+    }
+
+    input[type="text"], input[type="password"] {
+      width: 100%;
+      padding: 6px;
+      margin-bottom: 10px;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+    }
+
+    a {
+      color: #2196F3;
+      text-decoration: none;
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+
+<!-- Login Panel -->
+<div class="panel" id="loginPanel">
+  <h2>Login</h2>
+  <input type="text" id="loginUsername" placeholder="Username">
+  <input type="password" id="loginPassword" placeholder="Password">
+  <button onclick="login()">Login</button>
+  <p style="text-align:center;">Don't have an account? <a onclick="showRegister()">Register</a></p>
+</div>
+
+<!-- Register Panel -->
+<div class="panel" id="registerPanel" style="display:none;">
+  <h2>Create Account</h2>
+  <input type="text" id="registerUsername" placeholder="Username">
+  <div style="position:relative;">
+  <input type="password" id="registerPassword" placeholder="Password" style="width: calc(100% - 1px);">
+   
+  </div>
+  <small style="color: #555;"></small>
+  <button onclick="register()">Create Account</button>
+  <p style="text-align:center;">Already have an account? <a onclick="showLogin()">Login</a></p>
+</div>
+
+<!-- Home Panel -->
+<div class="panel" id="homePanel" style="display:none;">
+  <h2>FEED PACKAGING</h2>
+  <div class="icon-grid active" id="grid1">
+    <button class="icon-button" onclick="startMachine()">▶️</button>
+    <button class="icon-button" onclick="stopMachine()">⏹️</button>
+    <button class="icon-button" onclick="togglePanels('inventoryDetailsPanel')">📦</button>
+    <button class="icon-button" onclick="togglePanels('heatControlPanel')">🔥</button>
+    <button class="icon-button" onclick="togglePanels('powerPanel')">🔋</button>
+    <button class="icon-button" onclick="togglePanels('settingsPanel')">❓</button>
+  </div>
+  <div class="icon-grid" id="grid2">
+    <button class="icon-button" onclick="alert('Monitoring')">📊</button>
+    <button class="icon-button" onclick="alert('conveyorPanel')">⚙️</button>
+    <button class="icon-button" onclick="togglePanels('networkPanel')">🌐</button>
+    <button class="icon-button" onclick="alert('Camera')">📷</button>
+    <button class="icon-button" onclick="togglePanels('userLogsPanel')">🧑</button>
+    <button class="icon-button" onclick="logout()">🔓</button>
+  </div>
+  <div class="nav-buttons">
+    <button class="nav-button" onclick="switchGrid(-1)">◀</button>
+    <button class="nav-button" onclick="switchGrid(1)">▶</button>
+  </div>
+</div>
+
+<!-- Network Panel -->
+<div class="panel" id="networkPanel" style="display:none">
+  <h2>Network Settings</h2>
+  <p>Wi-Fi Status: <span id="wifiStatus">Disconnected</span></p>
+  <div class="toggle-container">
+    <label class="switch">
+      <input type="checkbox" id="wifiToggle" onchange="toggleWiFi()">
+      <span class="slider"></span>
+    </label>
+    <span class="toggle-label">Wi-Fi</span>
+  </div>
+  <button onclick="goBack()">🔙 Back</button>
+</div>
+
+<!-- Other Panels (Inventory, Power, Settings, Heat) -->
+<div class="panel" id="inventoryDetailsPanel" style="display:none">
+  <h2>Inventory Details</h2>
+  <table>
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Count</th>
+        <th>Timestamp</th>
+      </tr>
+    </thead>
+    <tbody id="inventoryTable"></tbody>
+  </table>
+  <button onclick="addEffective()">Add Effective</button>
+  <button onclick="removeEffective()">Remove Effective</button>
+  <button onclick="addIneffective()">Add Ineffective</button>
+  <button onclick="removeIneffective()">Remove Ineffective</button>
+  <button onclick="goBack()">🔙 Back</button>
+</div>
+
+<div class="panel" id="powerPanel" style="display:none">
+  <h2>Power Supply</h2>
+  <p>Battery Health: <span id="batteryHealth">Good</span></p>
+  <button onclick="alert('Switched to Main PS')">🔌 Main Power</button>
+  <button onclick="alert('Switched to Backup PS')">🔋 Backup Power</button>
+  <button onclick="goBack()">🔙 Back</button>
+</div>
+
+<div class="panel" id="settingsPanel" style="display:none">
+  <h2>DETAILS</h2>
+  <p><strong>Microcontroller (MCU):</strong> ESP32S3, ESP32WROOM, Arduino Mega2560</p>
+  <p><strong>Sensor:</strong> Load Cell HX711, HuskyLens, IR Sensor</p>
+  <p><strong>Servo & Motor:</strong> MG996R Servo, Stepper Motor</p>
+  <p><strong>Power Supply:</strong> 12V 25Ah Battery, Solar</p>
+  <p><strong>Mechatronics:</strong> Robotic Arm, Conveyor</p>
+  <p><strong>Other:</strong> 5 Channel Relay, TB6600, Buck Converter, Resistors, Capacitor, MOSFET, Heatsink, Nichrome Wire, ESP32S3 LCD, Switch</p>
+  <button onclick="goBack()">🔙 Back</button>
+</div>
+
+<div class="panel" id="heatControlPanel" style="display:none">
+  <h2>Heat Sealing Control</h2>
+  <label for="heatSlider"><strong>Sealing Temperature:</strong> <span id="heatValue">50</span>°C</label>
+  <input type="range" id="heatSlider" min="0" max="1000" value="50" onchange="updateHeat()" style="width: 100%; margin-top: 10px;">
+  <button onclick="goBack()">🔙 Back</button>
+</div>
+
+<!-- User Logs Panel -->
+<div class="panel" id="userLogsPanel" style="display:none">
+  <h2>User Access Log</h2>
+  <table>
+    <thead><tr><th>User</th><th>Last Login</th></tr></thead>
+    <tbody id="userLogTable"></tbody>
+  </table>
+  <button onclick="goBack()">🔙 Back</button>
+</div>
+
+
+<script>
+  // Login/Register logic
+  window.onload = function () {
+    document.getElementById("loginPanel").style.display = "block";
+    document.getElementById("homePanel").style.display = "none";
+  }
+
+  function showRegister() {
+    document.getElementById("loginPanel").style.display = "none";
+    document.getElementById("registerPanel").style.display = "block";
+  }
+
+  function showLogin() {
+    document.getElementById("registerPanel").style.display = "none";
+    document.getElementById("loginPanel").style.display = "block";
+  }
+
+  function register() {
+    const user = document.getElementById("registerUsername").value;
+    const pass = document.getElementById("registerPassword").value;
+    if (!user || !pass) return alert("Fill both fields");
+    localStorage.setItem("user_" + user, pass);
+    alert("Account created");
+    showLogin();
+  }
+
+  function login() {
+    const user = document.getElementById("loginUsername").value;
+    const pass = document.getElementById("loginPassword").value;
+    const stored = localStorage.getItem("user_" + user);
+    if (stored === pass) {
+      alert("Login successful");
+      document.getElementById("loginPanel").style.display = "none";
+      document.getElementById("homePanel").style.display = "block";
+    } else {
+      alert("Wrong username or password");
+    }
+  }
+
+  // System logic
+  let currentGrid = 0;
+  const grids = [document.getElementById('grid1'), document.getElementById('grid2')];
+
+  function switchGrid(dir) {
+    grids[currentGrid].classList.remove('active');
+    currentGrid = (currentGrid + dir + grids.length) % grids.length;
+    grids[currentGrid].classList.add('active');
+  }
+
+  let effective = 0, ineffective = 0;
+
+  function startMachine() { alert("Machine Started"); }
+  function stopMachine() { alert("Machine Stopped"); }
+
+  function togglePanels(showId) {
+    document.querySelectorAll(".panel").forEach(p => p.style.display = "none");
+    document.getElementById(showId).style.display = "block";
+    if (showId === "inventoryDetailsPanel") renderInventoryTable();
+  }
+
+  function goBack() { togglePanels("homePanel"); }
+
+  function getTimestamp() { return new Date().toLocaleString(); }
+
+  function renderInventoryTable() {
+    const table = document.getElementById("inventoryTable");
+    table.innerHTML = `
+      <tr><td>Effective</td><td>${effective}</td><td>${getTimestamp()}</td></tr>
+      <tr><td>Ineffective</td><td>${ineffective}</td><td>${getTimestamp()}</td></tr>
+    `;
+  }
+
+  function addEffective() { effective++; renderInventoryTable(); }
+  function removeEffective() { if (effective > 0) effective--; renderInventoryTable(); }
+  function addIneffective() { ineffective++; renderInventoryTable(); }
+  function removeIneffective() { if (ineffective > 0) ineffective--; renderInventoryTable(); }
+
+  function updateHeat() {
+    document.getElementById("heatValue").textContent = document.getElementById("heatSlider").value;
+  }
+
+  function toggleWiFi() {
+    const toggle = document.getElementById("wifiToggle");
+    document.getElementById("wifiStatus").textContent = toggle.checked ? "Connected" : "Disconnected";
+  }
+
+  function logout() {
+  document.getElementById("homePanel").style.display = "none";
+  document.getElementById("loginPanel").style.display = "block";
+}
+
+function login() {
+  const user = document.getElementById("loginUsername").value;
+  const pass = document.getElementById("loginPassword").value;
+  const stored = localStorage.getItem("user_" + user);
+  if (stored === pass) {
+    alert("Login successful");
+    localStorage.setItem("lastLogin_" + user, new Date().toLocaleString());
+    document.getElementById("loginPanel").style.display = "none";
+    document.getElementById("homePanel").style.display = "block";
+  } else {
+    alert("Wrong username or password");
+  }
+}
+
+function renderUserLogs() {
+  const tbody = document.getElementById("userLogTable");
+  tbody.innerHTML = "";
+  for (let key in localStorage) {
+    if (key.startsWith("user_")) {
+      const user = key.slice(5);
+      const loginTime = localStorage.getItem("lastLogin_" + user) || "Never";
+      tbody.innerHTML += `<tr><td>${user}</td><td>${loginTime}</td></tr>`;
+    }
+  }
+}
+
+function togglePanels(showId) {
+  document.querySelectorAll(".panel").forEach(p => p.style.display = "none");
+  document.getElementById(showId).style.display = "block";
+  if (showId === "inventoryDetailsPanel") renderInventoryTable();
+  if (showId === "userLogsPanel") renderUserLogs();
+}
+function logout() {
+  // Hide all panels
+  document.querySelectorAll(".panel").forEach(p => p.style.display = "none");
+  // Show the login panel
+  document.getElementById("loginPanel").style.display = "block";
+}
+
+</script>
+</body>
+</html>
